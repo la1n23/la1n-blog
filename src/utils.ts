@@ -309,7 +309,7 @@ export class TagsGroup extends PostsCollationGroup {
   // Factory method to create a SeriesGroup instance with async data fetching
   static async build(posts?: CollectionEntry<'posts'>[]): Promise<SeriesGroup> {
     const sortedPosts = posts || (await getSortedPosts())
-    const tagsGroup = new TagsGroup('Tags', '/tags', [])
+    const tagsGroup = new TagsGroup('Tags', '/la1n-blog/tags', [])
     sortedPosts.forEach((post) => {
       const frontmatterTags = post.data.tags || []
       frontmatterTags.forEach((tag) => {

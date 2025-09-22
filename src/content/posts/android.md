@@ -10,11 +10,11 @@ coverImage:
 ---
 
 This guide provides a concise cheatsheet to set up the Android Emulator on Linux (and possibly macOS), gain root access, and configure Frida to bypass SSL pinning of an Android application.
-# Install frida-tool
+## Install frida-tool
 ```bash
 pip install --upgrade frida-tools frida 
 ```
-# Setting up Emulator
+## Setting up Emulator
 1. Download and install Android studio, run it and navigate to AVD to create an emulator. I prefer using Pixel 5. Select the minimum SDK version (Google Play or Open Source) required for your APK:
 ```bash
 aapt dump badging com.app.android.apk | grep sdkVersion
@@ -25,9 +25,9 @@ If the emulator won't run, try:
 ```bash
 sudo modprobe kvm_intel kvm kvm_amd
 ```
-## Warning
+### Warning
 **Pay attention to which SDK version and arch you use in the next commands**
-## 1) Rooting Emulator
+### 1) Rooting Emulator
 1. Run in your terminal:
 ```bash
 git clone https://gitlab.com/newbit/rootAVD.git/ && cd rootAVD
@@ -37,7 +37,7 @@ git clone https://gitlab.com/newbit/rootAVD.git/ && cd rootAVD
 3. Run Emulator again
 4. Open Magisk, allow notifications and click Ok to reboot
 5. Run Magisk again and update it if asked
-## 2) Install frida on Emulator
+### 2) Install frida on Emulator
 1. Check frida version on your system:
 ```bash
 frida --version                                                               
@@ -67,7 +67,7 @@ ps -A | grep frida
 ```bash
 frida-ps -U
 ```
-# Installing and running apk file
+## Installing and running apk file
 1. Set up Burp proxy listener on `0.0.0.0:8081`
 2. Run Emulator with proxy:
  ```bash
