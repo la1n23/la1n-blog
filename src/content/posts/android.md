@@ -79,8 +79,8 @@ adb install ./com.name.apk
 # or if its unpacked .xapk
 adb install-multiple ./com.name.apk config.arm64_v8a.apk config.xxxhdpi.apk 
 ```
-2. Start your App
-3. Run frida-script on host machine:
+4. Start your App
+5. Run frida-script on host machine:
 ```bash
 frida -U --codeshare sowdust/universal-android-ssl-pinning-bypass-2 -n <app name from frida-ps list> 
 ```

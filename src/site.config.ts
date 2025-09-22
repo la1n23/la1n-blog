@@ -9,7 +9,7 @@ const config: SiteConfig = {
   description:
     'A coder-ready Astro blog theme with 59 of your favorite color schemes to choose from',
   // The author of the site, used in the footer, SEO, and RSS feed.
-  author: 'La1n Iwakra',
+  author: 'La1n Iwakura',
   // Keywords for SEO, used in the meta tags.
   tags: ['Bug Bounty', 'Cybersecurity'],
   // Path to the image used for generating social media previews.
