@@ -17,7 +17,7 @@ interface Props {
 
 const { title, description, tags, author } = Astro.props
 const pageUrl = new URL(Astro.url.pathname, Astro.site).href.replace(/\/$/, '') // Remove trailing slash for consistency
-const pageType = Astro.url.pathname.startsWith('/la1n-blog/posts') ? 'article' : 'website'
+const pageType = Astro.url.pathname.startsWith('/posts') ? 'article' : 'website'
 const pageTitle = title ? `${title} - ${siteConfig.title}` : siteConfig.title
 const pageDescription = description || siteConfig.description
 const pageAuthor = author || siteConfig.author
@@ -141,7 +141,7 @@ let generatedCss: string = cssLines.join('\n')
     <meta name="keywords" content={pageKeywords} />
     <link rel="canonical" href={pageUrl} />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <link rel="icon" href="/la1n-blog/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link
       rel="alternate"
       type="application/rss+xml"

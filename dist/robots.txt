@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://la1n23.github.io/la1n-blog/sitemap-index.xml
+Sitemap: https://la1n23.lol/sitemap-index.xml

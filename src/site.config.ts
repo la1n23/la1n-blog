@@ -2,7 +2,7 @@ import type { SiteConfig } from '~/types'
 
 const config: SiteConfig = {
   // Absolute URL to the root of your published site, used for generating links and sitemaps.
-  site: 'https://la1n23.github.io/la1n-blog/',
+  site: 'https://la1n23.lol/',
   // The name of your site, used in the title and for SEO.
   title: 'La1n\'s Blog',
   // The description of your site, used for SEO and RSS feed.
@@ -30,11 +30,11 @@ const config: SiteConfig = {
   navLinks: [
     {
       name: 'Home',
-      url: '/la1n-blog',
+      url: '/',
     },
     {
       name: 'Posts',
-      url: '/la1n-blog/posts',
+      url: '/posts',
     },
     {
       name: 'GitHub',
