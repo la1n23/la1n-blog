@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://la1n23.lol/sitemap-index.xml
