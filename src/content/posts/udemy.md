@@ -8,15 +8,17 @@ coverImage:
   src: './lain.gif'
   alt: 'Lain forever'
 ---
-This is a full bug report disclosed because the company hasn't responded to me. It's no longer reproducible since Udemy has disabled the Personal Plan Trial, but the Team Plan Trial is still available. This will probably work as well.
+Hi guys, I think many of us bug hunters have been in a situation where you found a bug, reported it, but haven't heard back in months. Usually you just forget about it and move to the next target, but that doesn't have to be the case. There's a last resort stated in the HackerOne Disclosure Policy: https://www.hackerone.com/terms/disclosure-guidelines
+Last resort: If 180 days have elapsed with the Security Team being unable or unwilling to provide a vulnerability disclosure timeline, the contents of the Report may be publicly disclosed by the Finder. We believe transparency is in the public's best interest in these extreme cases.
 
-Timeline:
-* June 12, 2025 - report submitted
-* July 1, 2025 - an H1 triager reproduced my report and changed the status to "program review"
-* December 6, 2025 - I messaged that if I didn't get any updates from the program within 7 days, I would proceed with vulnerability disclosure
-* December 9, 2025 - got a reply from H1 triager: "Notified program again"
+So here I'll share my experience with the Udemy bug bounty program. Timeline:
+- June 12, 2025 - report submitted
+- July 1, 2025 - an H1 triager reproduced my report and changed the status to "program review"
+- December 6, 2025 - I messaged that if I didn't get any updates from the program within 7 days, I would proceed with vulnerability disclosure
+- December 9, 2025 - got a reply from H1 triager: "Notified program again"
 
-Udemy ignored me again and doesn't consider this a bug. 180 days have already passed, which means I'm free to disclose it. It's a BAC, Medium (5.3) severity that allows you to get paid courses for free.
+So, Udemy ignored me again and doesn't consider this a bug. 180 days have already passed, which means I'm free to disclose it. It's a BAC, Medium (5.3) severity that allows you to get paid courses for free.
+I just tried to retest it and noticed a funny thing: my account was suspended due to a policy violation and the Personal Plan Trial is disabled now. But I think it will work with the Team Plan Trial as well ;)
 
 # Personal Plan allows to enroll in paid courses that should not be accessible without payment
 ## Summary:
