@@ -9,7 +9,8 @@ coverImage:
   alt: 'Lain forever'
 ---
 Hi guys, I think many of us bug hunters have been in a situation where you found a bug, reported it, but haven't heard back in months. Usually you just forget about it and move to the next target, but that doesn't have to be the case. There's a last resort stated in the HackerOne Disclosure Policy: https://www.hackerone.com/terms/disclosure-guidelines
-Last resort: If 180 days have elapsed with the Security Team being unable or unwilling to provide a vulnerability disclosure timeline, the contents of the Report may be publicly disclosed by the Finder. We believe transparency is in the public's best interest in these extreme cases.
+
+>Last resort: If 180 days have elapsed with the Security Team being unable or unwilling to provide a vulnerability disclosure timeline, the contents of the Report may be publicly disclosed by the Finder. We believe transparency is in the public's best interest in these extreme cases.
 
 So here I'll share my experience with the Udemy bug bounty program. Timeline:
 - June 12, 2025 - report submitted
