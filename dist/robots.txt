@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://la1n23.github.io/la1n-blog/sitemap-index.xml

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet href="/rss.xsl" type="text/xsl"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>La1n&apos;s Blog</title><description>A coder-ready Astro blog theme with 59 of your favorite color schemes to choose from</description><link>https://la1n23.github.io/la1n-blog</link><item><title>Bug hunting on Android apps</title><link>https://la1n23.github.io/posts/android</link><guid isPermaLink="true">https://la1n23.github.io/posts/android</guid><pubDate>Tue, 23 Sep 2025 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;This guide provides a concise cheatsheet to set up the Android Emulator on Linux (and possibly macOS), gain root access, and configure Frida to bypass SSL pinning of an Android application.&lt;/p&gt;
+&lt;h2&gt;Install frida-tool&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;pip install --upgrade frida-tools frida 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2&gt;Setting up Emulator&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Download and install Android studio, run it and navigate to AVD to create an emulator. I prefer using Pixel 5. Select the minimum SDK version (Google Play or Open Source) required for your APK:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code&gt;aapt dump badging com.app.android.apk | grep sdkVersion
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ol&gt;
+&lt;li&gt;Choose either x86 or x86_64 - one might work for a particular application, while the other might not. Same for SDK versions. Do not expect any application to run successfully.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;If the emulator won&apos;t run, try:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo modprobe kvm_intel kvm kvm_amd
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3&gt;Warning&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Pay attention to which SDK version and arch you use in the next commands&lt;/strong&gt;&lt;/p&gt;
+&lt;h3&gt;1) Rooting Emulator&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;Run in your terminal:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code&gt;git clone https://gitlab.com/newbit/rootAVD.git/ &amp;amp;&amp;amp; cd rootAVD
+./rootAVD.sh | grep 30
+./rootAVD.sh system-images/android-30/google_apis/x86/ramdisk.img
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ol&gt;
+&lt;li&gt;Run Emulator again&lt;/li&gt;
+&lt;li&gt;Open Magisk, allow notifications and click Ok to reboot&lt;/li&gt;
+&lt;li&gt;Run Magisk again and update it if asked&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3&gt;2) Install frida on Emulator&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;Check frida version on your system:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code&gt;frida --version                                                               
+16.7.14
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ol&gt;
+&lt;li&gt;Download corresponding version of magisk-frida from https://github.com/ViRb3/magisk-frida/releases/&lt;/li&gt;
+&lt;li&gt;Transfer zip file to the device:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code&gt;adb push ~/Downloads/MagiskFrida-16.7.14-1.zip /sdcard/
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ol&gt;
+&lt;li&gt;Open Magisk on Emulator, click Module and select &lt;code&gt;Install from Storage&lt;/code&gt;, navigate to &lt;code&gt;sdk_hphone64_x86_64&lt;/code&gt; and select the archive&lt;/li&gt;
+&lt;li&gt;Wait and click Reboot&lt;/li&gt;
+&lt;li&gt;Disable protection (not sure if it&apos;s necessary):&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code&gt;adb shell su -c setenforce 0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ol&gt;
+&lt;li&gt;Import Burp cert from proxy options and upload to the device:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code&gt;adb push ~/cert-der.crt /data/local/tmp/cert-der.crt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ol&gt;
+&lt;li&gt;Ensure &lt;code&gt;frida-server&lt;/code&gt; is running:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code&gt;adb shell
+ps -A | grep frida
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ol&gt;
+&lt;li&gt;Check if it&apos;s working on host machine:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code&gt;frida-ps -U
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2&gt;Installing and running apk file&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Set up Burp proxy listener on &lt;code&gt;0.0.0.0:8081&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Run Emulator with proxy:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code&gt;emulator -avd &quot;Pixel_5&quot; -writable-system -http-proxy 127.0.0.1:8081
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ol&gt;
+&lt;li&gt;Install your apk which you downloaded from APK Pure or APK Mirror:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code&gt;adb install ./com.name.apk
+# or if its unpacked .xapk
+adb install-multiple ./com.name.apk config.arm64_v8a.apk config.xxxhdpi.apk 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ol&gt;
+&lt;li&gt;Start your App&lt;/li&gt;
+&lt;li&gt;Run frida-script on host machine:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code&gt;frida -U --codeshare sowdust/universal-android-ssl-pinning-bypass-2 -n &amp;lt;app name from frida-ps list&amp;gt; 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Another frida scripts if the previous fails:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;frida -U --codeshare pcipolloni/universal-android-ssl-pinning-bypass-with-frida -n AppName
+frida -U --codeshare akabe1/frida-multiple-unpinning -n AppName
+&lt;/code&gt;&lt;/pre&gt;
+</content:encoded><author>La1n Iwakura</author></item><item><title>Udemy - Bug Disclosed</title><link>https://la1n23.github.io/posts/udemy</link><guid isPermaLink="true">https://la1n23.github.io/posts/udemy</guid><pubDate>Sat, 03 Jan 2026 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;This is a full bug report disclosed because the company hasn&apos;t responded to me. It&apos;s no longer reproducible since Udemy has disabled the Personal Plan Trial, but the Team Plan Trial is still available. This will probably work as well.&lt;/p&gt;
+&lt;p&gt;Timeline:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;June 12, 2025 - report submitted&lt;/li&gt;
+&lt;li&gt;July 1, 2025 - an H1 triager reproduced my report and changed the status to &quot;program review&quot;&lt;/li&gt;
+&lt;li&gt;December 6, 2025 - I messaged that if I didn&apos;t get any updates from the program within 7 days, I would proceed with vulnerability disclosure&lt;/li&gt;
+&lt;li&gt;December 9, 2025 - got a reply from H1 triager: &quot;Notified program again&quot;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Udemy ignored me again and doesn&apos;t consider this a bug. 180 days have already passed, which means I&apos;m free to disclose it. It&apos;s a BAC, Medium (5.3) severity that allows you to get paid courses for free.&lt;/p&gt;
+&lt;h1&gt;Personal Plan allows to enroll in paid courses that should not be accessible without payment&lt;/h1&gt;
+&lt;h2&gt;Summary:&lt;/h2&gt;
+&lt;p&gt;Activation of the Personal Plan Subscription (trial) allows enrollment in the courses that are not listed in the subscription and require separate  payment.&lt;/p&gt;
+&lt;h2&gt;Steps To Reproduce:&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Create new account (I used social-login with xxxxxx@gmail.com address)&lt;/li&gt;
+&lt;li&gt;Visit https://www.udemy.com/subscription-checkout/express/?subscription-id=759247 and activate trial subscription&lt;/li&gt;
+&lt;li&gt;Go search  for courses that are not in our plan and require payment  https://www.udemy.com/courses/search/?subs_filter_type=purchasable_only&amp;amp;q=hacking&lt;/li&gt;
+&lt;li&gt;Choose &quot;Ultimate ethical hacking&quot; for example&lt;/li&gt;
+&lt;li&gt;Enable Burp proxy and visit course link https://www.udemy.com/course/ultimate-ethical-hacking/&lt;/li&gt;
+&lt;li&gt;Note that it costs $9.90 and we are offered to proceed to checkout&lt;/li&gt;
+&lt;li&gt;Switch to Burp HTTP history. Look for request https://www.udemy.com/api/2024-01/graphql/ that has in &apos;badgeClassesByCourseId&apos; in body, note course ID 3581477 in variables section&lt;/li&gt;
+&lt;li&gt;Now send this request to Burp Repeater, replace the request body with new payload and click Send:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code&gt;{&quot;query&quot;:&quot;\n    mutation enrollInCourse($id: ID!) {\n  enrollmentCreate(learningProduct: {id: $id, type: COURSE}) {\n    enrollment {\n      createdAt\n    }\n  }\n}\n    &quot;,&quot;variables&quot;:{&quot;id&quot;:3581477}}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ol&gt;
+&lt;li&gt;Just successfully enrolled in a course that have not been paid for&lt;/li&gt;
+&lt;li&gt;To check it, visit  https://www.udemy.com/course-dashboard-redirect/?course_id=3581477 and see a fully functional course&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;Impact&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Loss of partial revenue for the company&lt;/li&gt;
+&lt;li&gt;Loss of income for instructors&lt;/li&gt;
+&lt;li&gt;Massive leaks of paid course content&lt;/li&gt;
+&lt;/ul&gt;
+</content:encoded><author>La1n Iwakura</author></item></channel></rss>
